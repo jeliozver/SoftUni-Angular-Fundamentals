@@ -57,7 +57,6 @@ export class RegisterComponent implements OnInit {
     this.authenticationService
       .register(this.registerForm.value)
       .subscribe(res => {
-        this.authenticationService.saveSession(res);
         this.router.navigate(['/home']);
       }, err => {
         this.error = err;

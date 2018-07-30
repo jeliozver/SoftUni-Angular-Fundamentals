@@ -4,7 +4,6 @@ import { catchError } from 'rxjs/operators';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 
 const appKey = 'kid_BknrkNzqM';
-const appSecret = 'f97d0e366aba45fa9e936342874134ac';
 const registerUrl = `https://baas.kinvey.com/user/${appKey}`;
 const loginUrl = `https://baas.kinvey.com/user/${appKey}/login`;
 const logoutUrl = `https://baas.kinvey.com/user/${appKey}/_logout`;
@@ -32,53 +31,25 @@ export class AuthenticationService {
     return this.getAuthtoken() !== null;
   }
 
-  saveSession(res: object): void {
-    localStorage.setItem('username', res['username']);
-    localStorage.setItem('authToken', res['_kmd']['authtoken']);
-    localStorage.setItem('userId', res['_id']);
-  }
-
-  clearSession(): void {
-    localStorage.clear();
-  }
-
   login(payload: object): Observable<Object> {
-    return this.http.post<object>(loginUrl, JSON.stringify(payload), this.getBasicAuthHeader())
+    return this.http.post<object>(loginUrl, JSON.stringify(payload))
       .pipe(
         catchError(this.handleError)
       );
   }
 
   register(payload: Object): Observable<Object> {
-    return this.http.post<object>(registerUrl, JSON.stringify(payload), this.getBasicAuthHeader())
+    return this.http.post<object>(registerUrl, JSON.stringify(payload))
       .pipe(
         catchError(this.handleError)
       );
   }
 
   logout(): Observable<Object> {
-    return this.http.post<object>(logoutUrl, {}, this.getKinveyAuthHeader())
+    return this.http.post<object>(logoutUrl, {})
       .pipe(
         catchError(this.handleError)
       );
-  }
-
-  private getBasicAuthHeader() {
-    return {
-      headers: new HttpHeaders({
-        'Authorization': 'Basic ' + btoa(appKey + ':' + appSecret),
-        'Content-Type': 'application/json'
-      })
-    };
-  }
-
-  private getKinveyAuthHeader() {
-    return {
-      headers: new HttpHeaders({
-        'Authorization': 'Kinvey ' + this.getAuthtoken(),
-        'Content-Type': 'application/json'
-      })
-    };
   }
 
   private handleError(error: HttpErrorResponse) {

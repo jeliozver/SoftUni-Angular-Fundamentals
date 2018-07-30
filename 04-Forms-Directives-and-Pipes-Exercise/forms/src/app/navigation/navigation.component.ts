@@ -16,7 +16,7 @@ export class NavigationComponent {
     this.authenticationService
       .logout()
       .subscribe(res => {
-        this.authenticationService.clearSession();
+
       }, err => {
         this.error = err;
       });
